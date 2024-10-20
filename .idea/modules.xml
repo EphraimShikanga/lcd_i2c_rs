@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/lcd_i2c_rs.iml" filepath="$PROJECT_DIR$/.idea/lcd_i2c_rs.iml" />
+    </modules>
+  </component>
+</project>
