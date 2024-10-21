@@ -117,8 +117,9 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
-    fn clear(&self) -> anyhow::Result<()> {
-        // Implement the method to clear the display
+    fn clear(&mut self) -> anyhow::Result<()> {
+        self.send(LCD_CLEARDISPLAY, 0x0)?;
+        Ets::delay_us(2000);
         Ok(())
     }
 }
