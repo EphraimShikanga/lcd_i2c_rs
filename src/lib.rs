@@ -118,6 +118,13 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    pub fn print_str(&mut self, str: &str ) -> anyhow::Result<()> {
+        for ch in str.chars() {
+            self.print(ch)?
+        }
+        Ok(())
+    }
+
 
     fn expander_write(&mut self, data: u8) -> anyhow::Result<()> {
         let bytes = [0, data];
