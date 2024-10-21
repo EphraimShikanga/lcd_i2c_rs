@@ -28,28 +28,30 @@ impl<'a> Lcd<'a> {
 
     pub fn init(&mut self) -> anyhow::Result<()> {
         let display_function = LCD_4BITMODE | LCD_2LINE | LCD_5X8DOTS;
-        FreeRtos::delay_ms(50);
+        Ets::delay_ms(50);
 
         self.expander_write(self.backlight)?;
 
-        FreeRtos::delay_ms(1000);
+        Ets::delay_ms(1000);
 
         for _ in 0..3 {
-            self.write4bits((0x03 << 4) | self.backlight)?;
-            FreeRtos::delay_ms(5);
+            self.write4bits(((0x03 << 4) | self.backlight))?;
+            Ets::delay_us(4500);
         }
 
-        self.write4bits((0x02 << 4) | self.backlight)?;
+        self.write4bits(((0x02 << 4) | self.backlight))?;
 
-        self.send(LCD_FUNCTIONSET | display_function, 0x0)?;
+        self.send((LCD_FUNCTIONSET | display_function), 0x0)?;
 
         self.display_control = LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF;
         self.display_on()?;
         self.clear()?;
 
         self.display_mode = LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT;
-        self.send(LCD_ENTRYMODESET | self.display_mode, 0x0)?;
+        self.send((LCD_ENTRYMODESET | self.display_mode), 0x0)?;
 
+        self.send(LCD_RETURNHOME, 0x0)?;
+        Ets::delay_us(2000);
         Ok(())
     }
 
