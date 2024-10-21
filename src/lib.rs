@@ -97,6 +97,14 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    /// Turns off the LCD display.
+    ///
+    /// This function clears the display control bit to turn off the display and sends the command to the LCD.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(())` - If the display is successfully turned off.
+    /// * `Err(anyhow::Error)` - If there is an error while sending the command.
     pub fn display_off(&mut self) -> anyhow::Result<()> {
         self.display_control &= !LCD_DISPLAYON;
         let cmd = LCD_DISPLAYCONTROL | self.display_control;
