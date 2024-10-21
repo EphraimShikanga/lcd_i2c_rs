@@ -145,6 +145,17 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    /// Sets the cursor to a specific column and row on the LCD.
+    ///
+    /// # Arguments
+    ///
+    /// * `col` - The column position (0-indexed).
+    /// * `row` - The row position (0-indexed).
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(())` - If the cursor is successfully set.
+    /// * `Err(anyhow::Error)` - If the row is out of bounds or the number of rows is invalid.
     pub fn set_cursor(&mut self, col: u8, row: u8) -> anyhow::Result<()> {
         if row >= self.rows {
             return Err(anyhow::anyhow!("Row out of bounds"));
