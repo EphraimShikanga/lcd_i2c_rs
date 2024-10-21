@@ -1,6 +1,7 @@
 pub const LCD_ENTRYSHIFTDECREMENT: u8 = 0x00;
 pub const LCD_DISPLAYCONTROL: u8 = 0x08;
 pub const LCD_SETDDRAMADDR: u8 = 0x80;
+pub const LCD_SETCGRAMADDR: u8 = 0x40;
 pub const LCD_CLEARDISPLAY: u8 = 0x01;
 pub const LCD_ENTRYMODESET: u8 = 0x04;
 pub const LCD_DISPLAYMOVE: u8 = 0x08;

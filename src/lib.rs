@@ -187,6 +187,17 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    pub fn create_custom_chars(&mut self, location: u8, charmap: &[u8]) -> anyhow::Result<()> {
+        if location > 7 {
+            return Err(anyhow::anyhow!("Custom character location out of bounds"));
+        }
+        self.send(LCD_SETCGRAMADDR | (location << 3), 0x0)?;
+        for i in 0..8 {
+            self.send(charmap[i], RS)?;
+        }
+        Ok(())
+    }
+
 
     fn expander_write(&mut self, data: u8) -> anyhow::Result<()> {
         let bytes = [0, data];
