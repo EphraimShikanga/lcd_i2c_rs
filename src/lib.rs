@@ -371,6 +371,15 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    /// Returns the cursor to the home position (0,0).
+    ///
+    /// This function sends the `LCD_RETURNHOME` command to the LCD, which moves the cursor
+    /// to the home position (0,0) and waits for the command to complete.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(())` - If the cursor is successfully moved to the home position.
+    /// * `Err(anyhow::Error)` - If there is an error while sending the command.
     pub fn home(&mut self) -> anyhow::Result<()> {
         self.send(LCD_RETURNHOME, 0x0)?;
         Ets::delay_us(2000);
