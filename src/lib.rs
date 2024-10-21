@@ -189,6 +189,20 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    pub fn left_to_right(&mut self) -> anyhow::Result<()> {
+        self.display_mode |= LCD_ENTRYLEFT;
+        let cmd = LCD_ENTRYMODESET | self.display_mode;
+        self.send(cmd, 0x0)?;
+        Ok(())
+    }
+
+    pub fn right_to_left(&mut self) -> anyhow::Result<()> {
+        self.display_mode &= !LCD_ENTRYLEFT;
+        let cmd = LCD_ENTRYMODESET | self.display_mode;
+        self.send(cmd, 0x0)?;
+        Ok(())
+    }
+
     pub fn home(&mut self) -> anyhow::Result<()> {
         self.send(LCD_RETURNHOME, 0x0)?;
         Ets::delay_us(2000);
