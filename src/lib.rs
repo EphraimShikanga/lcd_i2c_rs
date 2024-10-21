@@ -114,9 +114,21 @@ impl<'a> Lcd<'a> {
 
     pub fn cursor(&mut self, on: bool) -> anyhow::Result<()> {
         if on {
-            self.display_control |= !LCD_CURSOROFF;
+            self.display_control |= LCD_CURSORON;
         } else {
-            self.display_control &= LCD_CURSOROFF;
+            self.display_control &= !LCD_CURSORON;
+        }
+
+        let cmd = LCD_DISPLAYCONTROL | self.display_control;
+        self.send(cmd, 0x0)?;
+        Ok(())
+    }
+
+    pub fn blink(&mut self, on: bool) -> anyhow::Result<()> {
+        if on {
+            self.display_control |= LCD_BLINKON;
+        } else {
+            self.display_control &= !LCD_BLINKON;
         }
 
         let cmd = LCD_DISPLAYCONTROL | self.display_control;
