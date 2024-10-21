@@ -288,6 +288,19 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    /// Controls the autoscroll feature of the LCD.
+    ///
+    /// This function enables or disables the autoscroll feature, which causes the display to automatically
+    /// scroll the text when new characters are printed.
+    ///
+    /// # Arguments
+    ///
+    /// * `on` - A boolean indicating whether to enable (`true`) or disable (`false`) autoscroll.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(())` - If the autoscroll setting is successfully changed.
+    /// * `Err(anyhow::Error)` - If there is an error while sending the command.
     pub fn autoscroll(&mut self, on: bool) -> anyhow::Result<()> {
         if on {
             self.display_mode |= LCD_ENTRYSHIFTINCREMENT;
@@ -300,12 +313,28 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    /// Scrolls the display to the left.
+    ///
+    /// This function shifts the entire display to the left by one position.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(())` - If the display is successfully scrolled.
+    /// * `Err(anyhow::Error)` - If there is an error while sending the command.
     pub fn scroll_left(&mut self) -> anyhow::Result<()> {
         let cmd = LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVELEFT;
         self.send(cmd, 0x0)?;
         Ok(())
     }
 
+    /// Scrolls the display to the right.
+    ///
+    /// This function shifts the entire display to the right by one position.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(())` - If the display is successfully scrolled.
+    /// * `Err(anyhow::Error)` - If there is an error while sending the command.
     pub fn scroll_right(&mut self) -> anyhow::Result<()> {
         let cmd = LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVERIGHT;
         self.send(cmd, 0x0)?;
