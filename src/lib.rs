@@ -105,6 +105,8 @@ impl<'a> Lcd<'a> {
 
     fn display(&mut self) -> anyhow::Result<()> {
         self.display_control |= LCD_DISPLAYON;
+        let cmd = LCD_DISPLAYCONTROL | self.display_control;
+        self.send(cmd, 0x0)?;
         Ok(())
     }
 
