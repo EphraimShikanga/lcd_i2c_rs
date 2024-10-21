@@ -1,7 +1,7 @@
 mod consts;
 
 use crate::consts::*;
-use esp_idf_hal::delay::{Ets,BLOCK};
+use esp_idf_hal::delay::{Ets, BLOCK};
 use esp_idf_hal::i2c::*;
 use esp_idf_hal::sys::EspError;
 
@@ -16,6 +16,17 @@ pub struct Lcd<'a> {
 }
 
 impl<'a> Lcd<'a> {
+    /// Creates a new `Lcd` instance.
+    ///
+    /// # Arguments
+    ///
+    /// * `i2c` - A result containing an `I2cDriver` or an `EspError`.
+    /// * `cols` - The number of columns in the LCD.
+    /// * `rows` - The number of rows in the LCD.
+    ///
+    /// # Returns
+    ///
+    /// A new `Lcd` instance.
     pub fn new(i2c: Result<I2cDriver<'a>, EspError>, cols: u8, rows: u8) -> Self {
         Self {
             i2c,
@@ -28,6 +39,15 @@ impl<'a> Lcd<'a> {
         }
     }
 
+    /// Initializes the LCD display.
+    ///
+    /// This function sets up the LCD display by configuring the display function,
+    /// writing initial commands, and setting the display mode and control settings.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(())` - If the initialization is successful.
+    /// * `Err(anyhow::Error)` - If there is an error during initialization.
     pub fn init(&mut self) -> anyhow::Result<()> {
         let display_function;
         if self.rows > 1 {
@@ -61,6 +81,15 @@ impl<'a> Lcd<'a> {
         Ets::delay_us(2000);
         Ok(())
     }
+
+    /// Turns on the LCD display.
+    ///
+    /// This function sets the display control bit to turn on the display and sends the command to the LCD.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(())` - If the display is successfully turned on.
+    /// * `Err(anyhow::Error)` - If there is an error while sending the command.
     pub fn display_on(&mut self) -> anyhow::Result<()> {
         self.display_control |= LCD_DISPLAYON;
         let cmd = LCD_DISPLAYCONTROL | self.display_control;
@@ -94,9 +123,9 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
-    pub fn set_cursor(&mut self, col: u8, row: u8 ) -> anyhow::Result<()> {
+    pub fn set_cursor(&mut self, col: u8, row: u8) -> anyhow::Result<()> {
         if row >= self.rows {
-            return Err(anyhow::anyhow!("Row out of bounds"))
+            return Err(anyhow::anyhow!("Row out of bounds"));
         }
 
         let row_offsets: &[u8] = match self.rows {
@@ -142,7 +171,7 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
-    pub fn print_str(&mut self, str: &str ) -> anyhow::Result<()> {
+    pub fn print_str(&mut self, str: &str) -> anyhow::Result<()> {
         for ch in str.chars() {
             self.print(ch)?
         }
@@ -236,7 +265,6 @@ impl<'a> Lcd<'a> {
         }
         Ok(())
     }
-
 
     fn expander_write(&mut self, data: u8) -> anyhow::Result<()> {
         let bytes = [0, data];
