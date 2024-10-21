@@ -145,6 +145,18 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    pub fn scroll_left(&mut self) -> anyhow::Result<()> {
+        let cmd = LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVELEFT;
+        self.send(cmd, 0x0)?;
+        Ok(())
+    }
+
+    pub fn scroll_right(&mut self) -> anyhow::Result<()> {
+        let cmd = LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVERIGHT;
+        self.send(cmd, 0x0)?;
+        Ok(())
+    }
+
 
     fn expander_write(&mut self, data: u8) -> anyhow::Result<()> {
         let bytes = [0, data];
