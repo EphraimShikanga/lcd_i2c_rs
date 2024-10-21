@@ -436,7 +436,7 @@ impl<'a> Lcd<'a> {
         self.i2c
             .as_mut()
             .unwrap()
-            .write(LCD_ADDRESS, &bytes, BLOCK)?;
+            .write(LCD_ADDRESS, &bytes, BLOCK).expect("Failed to write to expander");
         Ok(())
     }
 
