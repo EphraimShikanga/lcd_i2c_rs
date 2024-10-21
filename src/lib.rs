@@ -112,6 +112,18 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    pub fn cursor(&mut self, on: bool) -> anyhow::Result<()> {
+        if on {
+            self.display_control |= !LCD_CURSOROFF;
+        } else {
+            self.display_control &= LCD_CURSOROFF;
+        }
+
+        let cmd = LCD_DISPLAYCONTROL | self.display_control;
+        self.send(cmd, 0x0)?;
+        Ok(())
+    }
+
     pub fn print(&mut self, ch: char) -> anyhow::Result<()> {
         let data = ch as u8;
         self.send(data, RS)?;
@@ -154,6 +166,12 @@ impl<'a> Lcd<'a> {
     pub fn scroll_right(&mut self) -> anyhow::Result<()> {
         let cmd = LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVERIGHT;
         self.send(cmd, 0x0)?;
+        Ok(())
+    }
+
+    pub fn home(&mut self) -> anyhow::Result<()> {
+        self.send(LCD_RETURNHOME, 0x0)?;
+        Ets::delay_us(2000);
         Ok(())
     }
 
