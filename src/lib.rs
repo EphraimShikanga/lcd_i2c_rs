@@ -174,6 +174,19 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    /// Controls the cursor visibility on the LCD.
+    ///
+    /// This function sets or clears the cursor control bit to turn the cursor on or off
+    /// and sends the command to the LCD.
+    ///
+    /// # Arguments
+    ///
+    /// * `on` - A boolean indicating whether to turn the cursor on (`true`) or off (`false`).
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(())` - If the cursor visibility is successfully changed.
+    /// * `Err(anyhow::Error)` - If there is an error while sending the command.
     pub fn cursor(&mut self, on: bool) -> anyhow::Result<()> {
         if on {
             self.display_control |= LCD_CURSORON;
