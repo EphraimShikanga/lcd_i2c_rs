@@ -119,10 +119,10 @@ impl<'a> Lcd<'a> {
     /// # Panics
     ///
     /// This function will panic if it fails to write to the expander.
-    pub fn backlight_on(&mut self) {
+    pub fn backlight_on(&mut self) -> anyhow::Result<()> {
         self.backlight = LCD_BACKLIGHT;
-        self.expander_write(self.backlight)
-            .expect("Failed to write to the expander while turning on the backlight");
+        self.expander_write(self.backlight)?;
+        Ok(())
     }
 
     /// Turns off the LCD backlight.
@@ -132,10 +132,10 @@ impl<'a> Lcd<'a> {
     /// # Panics
     ///
     /// This function will panic if it fails to write to the expander.
-    pub fn backlight_off(&mut self) {
+    pub fn backlight_off(&mut self) -> anyhow::Result<()> {
         self.backlight = LCD_NOBACKLIGHT;
-        self.expander_write(self.backlight)
-            .expect("Failed to write to the expander while turning off the backlight");
+        self.expander_write(self.backlight)?;
+        Ok(())
     }
 
     pub fn clear(&mut self) -> anyhow::Result<()> {
