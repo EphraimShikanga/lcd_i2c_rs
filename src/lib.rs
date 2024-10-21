@@ -112,12 +112,26 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    /// Turns on the LCD backlight.
+    ///
+    /// This function sets the backlight bit and writes the value to the expander.
+    ///
+    /// # Panics
+    ///
+    /// This function will panic if it fails to write to the expander.
     pub fn backlight_on(&mut self) {
         self.backlight = LCD_BACKLIGHT;
         self.expander_write(self.backlight)
             .expect("Failed to write to the expander while turning on the backlight");
     }
 
+    /// Turns off the LCD backlight.
+    ///
+    /// This function clears the backlight bit and writes the value to the expander.
+    ///
+    /// # Panics
+    ///
+    /// This function will panic if it fails to write to the expander.
     pub fn backlight_off(&mut self) {
         self.backlight = LCD_NOBACKLIGHT;
         self.expander_write(self.backlight)
