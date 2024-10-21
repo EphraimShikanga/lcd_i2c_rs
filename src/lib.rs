@@ -54,6 +54,19 @@ impl<'a> Lcd<'a> {
         Ets::delay_us(2000);
         Ok(())
     }
+    pub fn display_on(&mut self) -> anyhow::Result<()> {
+        self.display_control |= LCD_DISPLAYON;
+        let cmd = LCD_DISPLAYCONTROL | self.display_control;
+        self.send(cmd, 0x0)?;
+        Ok(())
+    }
+
+    pub fn display_off(&mut self) -> anyhow::Result<()> {
+        self.display_control &= LCD_DISPLAYON;
+        let cmd = LCD_DISPLAYCONTROL | self.display_control;
+        self.send(cmd, 0x0)?;
+        Ok(())
+    }
 
     pub fn backlight_on(&mut self) {
         self.backlight = LCD_BACKLIGHT;
@@ -66,6 +79,14 @@ impl<'a> Lcd<'a> {
         self.expander_write(self.backlight)
             .expect("Failed to write to the expander while turning off the backlight");
     }
+
+    pub fn clear(&mut self) -> anyhow::Result<()> {
+        self.send(LCD_CLEARDISPLAY, 0x0)?;
+        Ets::delay_us(2000);
+        Ok(())
+    }
+
+
 
     fn expander_write(&mut self, data: u8) -> anyhow::Result<()> {
         let bytes = [0, data];
@@ -102,26 +123,6 @@ impl<'a> Lcd<'a> {
 
         let low_cmd = (low_nibble | mode) | self.backlight;
         self.write4bits(low_cmd)?;
-        Ok(())
-    }
-
-    fn display_on(&mut self) -> anyhow::Result<()> {
-        self.display_control |= LCD_DISPLAYON;
-        let cmd = LCD_DISPLAYCONTROL | self.display_control;
-        self.send(cmd, 0x0)?;
-        Ok(())
-    }
-
-    pub fn display_off(&mut self) -> anyhow::Result<()> {
-        self.display_control &= LCD_DISPLAYON;
-        let cmd = LCD_DISPLAYCONTROL | self.display_control;
-        self.send(cmd, 0x0)?;
-        Ok(())
-    }
-
-    fn clear(&mut self) -> anyhow::Result<()> {
-        self.send(LCD_CLEARDISPLAY, 0x0)?;
-        Ets::delay_us(2000);
         Ok(())
     }
 }
