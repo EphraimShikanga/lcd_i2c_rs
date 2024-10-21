@@ -18,6 +18,7 @@ pub const LCD_BLINKOFF: u8 = 0x00;
 pub const LCD_4BITMODE: u8 = 0x00;
 pub const LCD_5X8DOTS: u8 = 0x00;
 pub const LCD_ADDRESS: u8 = 0x27;
+pub const LCD_1LINE: u8 = 0x00;
 pub const LCD_2LINE: u8 = 0x08;
 pub const EN: u8 = 0x04;
 pub const RS: u8 = 0x01;

@@ -11,15 +11,19 @@ static mut BACKLIGHT: u8 = LCD_NOBACKLIGHT;
 
 pub struct Lcd<'a> {
     i2c: Result<I2cDriver<'a>, EspError>,
+    rows: u8,
+    cols: u8,
     display_mode: u8,
     display_control: u8,
     backlight: u8,
 }
 
 impl<'a> Lcd<'a> {
-    pub fn new(i2c: Result<I2cDriver<'a>, EspError>) -> Self {
+    pub fn new(i2c: Result<I2cDriver<'a>, EspError>, rows: u8, cols: u8) -> Self {
         Self {
             i2c,
+            rows,
+            cols,
             display_mode: LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT,
             display_control: LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF,
             backlight: LCD_NOBACKLIGHT,
@@ -27,7 +31,12 @@ impl<'a> Lcd<'a> {
     }
 
     pub fn init(&mut self) -> anyhow::Result<()> {
-        let display_function = LCD_4BITMODE | LCD_2LINE | LCD_5X8DOTS;
+        let display_function;
+        if self.rows > 1 {
+            display_function = LCD_4BITMODE | LCD_2LINE | LCD_5X8DOTS;
+        } else {
+            display_function = LCD_4BITMODE | LCD_1LINE | LCD_5X8DOTS;
+        }
         Ets::delay_ms(50);
 
         self.expander_write(self.backlight)?;
@@ -85,8 +94,6 @@ impl<'a> Lcd<'a> {
         Ets::delay_us(2000);
         Ok(())
     }
-
-
 
     fn expander_write(&mut self, data: u8) -> anyhow::Result<()> {
         let bytes = [0, data];
