@@ -44,7 +44,7 @@ impl<'a> Lcd<'a> {
         self.send(LCD_FUNCTIONSET | display_function, 0x0)?;
 
         self.display_control = LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF;
-        self.display()?;
+        self.display_on()?;
         self.clear()?;
 
         self.display_mode = LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT;
@@ -103,8 +103,15 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
-    fn display(&mut self) -> anyhow::Result<()> {
+    fn display_on(&mut self) -> anyhow::Result<()> {
         self.display_control |= LCD_DISPLAYON;
+        let cmd = LCD_DISPLAYCONTROL | self.display_control;
+        self.send(cmd, 0x0)?;
+        Ok(())
+    }
+
+    pub fn display_off(&mut self) -> anyhow::Result<()> {
+        self.display_control &= LCD_DISPLAYON;
         let cmd = LCD_DISPLAYCONTROL | self.display_control;
         self.send(cmd, 0x0)?;
         Ok(())
