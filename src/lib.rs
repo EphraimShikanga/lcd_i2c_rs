@@ -386,6 +386,16 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    /// Moves the cursor to the next line on the LCD.
+    ///
+    /// This function increments the `current_line` and sets the cursor to the beginning
+    /// of the next line. If the display has only one row, it returns an error. If the
+    /// `current_line` exceeds the number of rows, it wraps around to the first row.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(())` - If the cursor is successfully moved to the next line.
+    /// * `Err(anyhow::Error)` - If the display has only one row.
     pub fn next_line(&mut self) -> anyhow::Result<()> {
         if self.rows == 1 {
             return Err(anyhow::anyhow!("Next line not supported on 1 row display"));
