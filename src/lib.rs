@@ -1,7 +1,7 @@
 mod consts;
 
 use crate::consts::*;
-use esp_idf_hal::delay::{FreeRtos, BLOCK};
+use esp_idf_hal::delay::{FreeRtos, Ets,BLOCK};
 use esp_idf_hal::i2c::*;
 use esp_idf_hal::sys::EspError;
 
@@ -74,18 +74,37 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
-    fn write4bits(&self, _data: u8) -> anyhow::Result<()> {
-        // Implement the method to write 4 bits of data
+    fn pulse_enable(&mut self, data: u8) -> anyhow::Result<()> {
+        let pulse = (data | EN) | self.backlight;
+        self.expander_write(pulse)?;
+        Ets::delay_us(1);
+
+        let pulse = (data & !EN) | self.backlight;
+        self.expander_write(pulse)?;
+        Ets::delay_us(50);
         Ok(())
     }
 
-    fn send(&self, _value: u8, _mode: u8) -> anyhow::Result<()> {
-        // Implement the method to send data
+    fn write4bits(&mut self, data: u8) -> anyhow::Result<()> {
+        self.expander_write(data)?;
+        self.pulse_enable(data)?;
         Ok(())
     }
 
-    fn display(&self) -> anyhow::Result<()> {
-        // Implement the method to turn on the display
+    fn send(&mut self, value: u8, mode: u8) -> anyhow::Result<()> {
+        let high_nibble = value & 0xf0;
+        let low_nibble = (value << 4) & 0xf0;
+
+        let high_cmd = (high_nibble | mode) | self.backlight;
+        self.write4bits(high_cmd)?;
+
+        let low_cmd = (low_nibble | mode) | self.backlight;
+        self.write4bits(low_cmd)?;
+        Ok(())
+    }
+
+    fn display(&mut self) -> anyhow::Result<()> {
+        self.display_control |= LCD_DISPLAYON;
         Ok(())
     }
 
