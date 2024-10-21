@@ -53,6 +53,18 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    pub fn backlight_on(&mut self) {
+        self.backlight = LCD_BACKLIGHT;
+        self.expander_write(self.backlight)
+            .expect("Failed to write to the expander while turning on the backlight");
+    }
+
+    pub fn backlight_off(&mut self) {
+        self.backlight = LCD_NOBACKLIGHT;
+        self.expander_write(self.backlight)
+            .expect("Failed to write to the expander while turning off the backlight");
+    }
+
     fn expander_write(&mut self, data: u8) -> anyhow::Result<()> {
         let bytes = [0, data];
         self.i2c
