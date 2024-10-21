@@ -130,18 +130,18 @@ impl<'a> Lcd<'a> {
         let mut row = 0;
         self.set_cursor(col, row)?;
 
-        for ch in str.chars() {
-            if col >= self.cols {
-                col = 0;
-                row += 1;
-                if row >= self.rows {
-                    row = 0;
-                }
-                self.set_cursor(col, row)?;
+        for (i, ch) in str.chars().enumerate() {
+            col = (i as u8) % self.cols;
+            row = (i as u8) / self.cols;
+
+            if row >= self.rows {
+                row = 0;
             }
+
+            self.set_cursor(col, row)?;
             self.print(ch)?;
-            col += 1;
         }
+
         Ok(())
     }
 
