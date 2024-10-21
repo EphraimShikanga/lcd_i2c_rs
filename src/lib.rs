@@ -341,6 +341,14 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    /// Sets the text direction to left-to-right.
+    ///
+    /// This function sets the display mode to left-to-right text entry and sends the command to the LCD.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(())` - If the text direction is successfully set.
+    /// * `Err(anyhow::Error)` - If there is an error while sending the command.
     pub fn left_to_right(&mut self) -> anyhow::Result<()> {
         self.display_mode |= LCD_ENTRYLEFT;
         let cmd = LCD_ENTRYMODESET | self.display_mode;
@@ -348,6 +356,14 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    /// Sets the text direction to right-to-left.
+    ///
+    /// This function sets the display mode to right-to-left text entry and sends the command to the LCD.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(())` - If the text direction is successfully set.
+    /// * `Err(anyhow::Error)` - If there is an error while sending the command.
     pub fn right_to_left(&mut self) -> anyhow::Result<()> {
         self.display_mode &= !LCD_ENTRYLEFT;
         let cmd = LCD_ENTRYMODESET | self.display_mode;
