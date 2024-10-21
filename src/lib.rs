@@ -128,6 +128,7 @@ impl<'a> Lcd<'a> {
     pub fn print_long_str(&mut self, str: &str) -> anyhow::Result<()> {
         let mut col = 0;
         let mut row = 0;
+        self.set_cursor(col, row)?;
 
         for ch in str.chars() {
             if col >= self.cols {
