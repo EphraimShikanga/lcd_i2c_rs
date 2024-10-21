@@ -165,6 +165,18 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    pub fn autoscroll(&mut self, on: bool) -> anyhow::Result<()> {
+        if on {
+            self.display_mode |= LCD_ENTRYSHIFTINCREMENT;
+        } else {
+            self.display_mode &= !LCD_ENTRYSHIFTINCREMENT;
+        }
+
+        let cmd = LCD_ENTRYMODESET | self.display_mode;
+        self.send(cmd, 0x0)?;
+        Ok(())
+    }
+
     pub fn scroll_left(&mut self) -> anyhow::Result<()> {
         let cmd = LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVELEFT;
         self.send(cmd, 0x0)?;
