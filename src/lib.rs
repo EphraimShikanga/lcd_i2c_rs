@@ -224,12 +224,32 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    /// Prints a single character to the LCD.
+    ///
+    /// # Arguments
+    ///
+    /// * `ch` - The character to print.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(())` - If the character is successfully printed.
+    /// * `Err(anyhow::Error)` - If there is an error while sending the character.
     pub fn print(&mut self, ch: char) -> anyhow::Result<()> {
         let data = ch as u8;
         self.send(data, RS)?;
         Ok(())
     }
 
+    /// Prints a string to the LCD.
+    ///
+    /// # Arguments
+    ///
+    /// * `str` - The string to print.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(())` - If the string is successfully printed.
+    /// * `Err(anyhow::Error)` - If there is an error while printing any character.
     pub fn print_str(&mut self, str: &str) -> anyhow::Result<()> {
         for ch in str.chars() {
             self.print(ch)?
@@ -237,6 +257,17 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    /// Prints a long string to the LCD, wrapping text to the next line if necessary.
+    /// The text will be printed starting from the home position (0,0).
+    ///
+    /// # Arguments
+    ///
+    /// * `str` - The long string to print.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(())` - If the string is successfully printed.
+    /// * `Err(anyhow::Error)` - If there is an error while printing any character or setting the cursor.
     pub fn print_long_str(&mut self, str: &str) -> anyhow::Result<()> {
         let mut col = 0;
         let mut row = 0;
