@@ -12,6 +12,7 @@ pub struct Lcd<'a> {
     display_mode: u8,
     display_control: u8,
     backlight: u8,
+    current_line: u8,
 }
 
 impl<'a> Lcd<'a> {
@@ -23,6 +24,7 @@ impl<'a> Lcd<'a> {
             display_mode: LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT,
             display_control: LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF,
             backlight: LCD_NOBACKLIGHT,
+            current_line: 0,
         }
     }
 
@@ -88,6 +90,7 @@ impl<'a> Lcd<'a> {
     pub fn clear(&mut self) -> anyhow::Result<()> {
         self.send(LCD_CLEARDISPLAY, 0x0)?;
         Ets::delay_us(2000);
+        self.current_line = 0;
         Ok(())
     }
 
@@ -105,6 +108,7 @@ impl<'a> Lcd<'a> {
 
         let cmd = LCD_SETDDRAMADDR | (col + row_offsets[row as usize]);
         self.send(cmd, 0x0)?;
+        self.current_line = row;
         Ok(())
     }
 
@@ -206,6 +210,19 @@ impl<'a> Lcd<'a> {
     pub fn home(&mut self) -> anyhow::Result<()> {
         self.send(LCD_RETURNHOME, 0x0)?;
         Ets::delay_us(2000);
+        Ok(())
+    }
+
+    pub fn next_line(&mut self) -> anyhow::Result<()> {
+        if self.rows == 1 {
+            return Err(anyhow::anyhow!("Next line not supported on 1 row display"));
+        }
+        if self.current_line >= self.rows {
+            self.current_line = 0;
+        } else {
+            self.current_line += 1;
+        }
+        self.set_cursor(0, self.current_line)?;
         Ok(())
     }
 
