@@ -199,6 +199,19 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    /// Controls the blinking of the cursor on the LCD.
+    ///
+    /// This function sets or clears the blink control bit to turn the cursor blinking on or off
+    /// and sends the command to the LCD.
+    ///
+    /// # Arguments
+    ///
+    /// * `on` - A boolean indicating whether to turn the cursor blinking on (`true`) or off (`false`).
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(())` - If the cursor blinking is successfully changed.
+    /// * `Err(anyhow::Error)` - If there is an error while sending the command.
     pub fn blink(&mut self, on: bool) -> anyhow::Result<()> {
         if on {
             self.display_control |= LCD_BLINKON;
