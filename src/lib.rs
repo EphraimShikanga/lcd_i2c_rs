@@ -5,10 +5,6 @@ use esp_idf_hal::delay::{Ets,BLOCK};
 use esp_idf_hal::i2c::*;
 use esp_idf_hal::sys::EspError;
 
-static mut DISPLAY_MODE: u8 = 0;
-static mut DISPLAY_CONTROL: u8 = 0;
-static mut BACKLIGHT: u8 = LCD_NOBACKLIGHT;
-
 pub struct Lcd<'a> {
     i2c: Result<I2cDriver<'a>, EspError>,
     cols: u8,
