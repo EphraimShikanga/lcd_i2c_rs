@@ -1,7 +1,7 @@
 mod consts;
 
 use crate::consts::*;
-use esp_idf_hal::delay::{FreeRtos, Ets,BLOCK};
+use esp_idf_hal::delay::{Ets,BLOCK};
 use esp_idf_hal::i2c::*;
 use esp_idf_hal::sys::EspError;
 
@@ -11,19 +11,19 @@ static mut BACKLIGHT: u8 = LCD_NOBACKLIGHT;
 
 pub struct Lcd<'a> {
     i2c: Result<I2cDriver<'a>, EspError>,
-    rows: u8,
     cols: u8,
+    rows: u8,
     display_mode: u8,
     display_control: u8,
     backlight: u8,
 }
 
 impl<'a> Lcd<'a> {
-    pub fn new(i2c: Result<I2cDriver<'a>, EspError>, rows: u8, cols: u8) -> Self {
+    pub fn new(i2c: Result<I2cDriver<'a>, EspError>, cols: u8, rows: u8) -> Self {
         Self {
             i2c,
-            rows,
             cols,
+            rows,
             display_mode: LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT,
             display_control: LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF,
             backlight: LCD_NOBACKLIGHT,
@@ -44,20 +44,20 @@ impl<'a> Lcd<'a> {
         Ets::delay_ms(1000);
 
         for _ in 0..3 {
-            self.write4bits(((0x03 << 4) | self.backlight))?;
+            self.write4bits((0x03 << 4) | self.backlight)?;
             Ets::delay_us(4500);
         }
 
-        self.write4bits(((0x02 << 4) | self.backlight))?;
+        self.write4bits((0x02 << 4) | self.backlight)?;
 
-        self.send((LCD_FUNCTIONSET | display_function), 0x0)?;
+        self.send(LCD_FUNCTIONSET | display_function, 0x0)?;
 
         self.display_control = LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF;
         self.display_on()?;
         self.clear()?;
 
         self.display_mode = LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT;
-        self.send((LCD_ENTRYMODESET | self.display_mode), 0x0)?;
+        self.send(LCD_ENTRYMODESET | self.display_mode, 0x0)?;
 
         self.send(LCD_RETURNHOME, 0x0)?;
         Ets::delay_us(2000);
@@ -94,6 +94,30 @@ impl<'a> Lcd<'a> {
         Ets::delay_us(2000);
         Ok(())
     }
+
+    pub fn set_cursor(&mut self, col: u8, row: u8 ) -> anyhow::Result<()> {
+        if row >= self.rows {
+            return Err(anyhow::anyhow!("Row out of bounds"))
+        }
+
+        let row_offsets: &[u8] = match self.rows {
+            1 => &[0x00],
+            2 => &[0x00, 0x40],
+            4 => &[0x00, 0x40, 0x14, 0x54],
+            _ => return Err(anyhow::anyhow!("Invalid number of rows")),
+        };
+
+        let cmd = LCD_SETDDRAMADDR | (col + row_offsets[row as usize]);
+        self.send(cmd, 0x0)?;
+        Ok(())
+    }
+
+    pub fn print(&mut self, ch: char) -> anyhow::Result<()> {
+        let data = ch as u8;
+        self.send(data, RS)?;
+        Ok(())
+    }
+
 
     fn expander_write(&mut self, data: u8) -> anyhow::Result<()> {
         let bytes = [0, data];
