@@ -409,6 +409,17 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    /// Creates a custom character in the LCD's CGRAM (Character Generator RAM).
+    ///
+    /// # Arguments
+    ///
+    /// * `location` - The location in CGRAM to store the custom character (0-7).
+    /// * `charmap` - A slice containing the character map (8 bytes).
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(())` - If the custom character is successfully created.
+    /// * `Err(anyhow::Error)` - If the location is out of bounds or there is an error while sending the data.
     pub fn create_custom_chars(&mut self, location: u8, charmap: &[u8]) -> anyhow::Result<()> {
         if location > 7 {
             return Err(anyhow::anyhow!("Custom character location out of bounds"));
