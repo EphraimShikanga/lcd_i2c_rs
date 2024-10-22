@@ -22,3 +22,6 @@ harness = false
 [dependencies]
 esp-idf-hal = { version = "0.44.1", default-features = false }
 anyhow = "1.0.90"
+
+[build-dependencies]
+embuild = "0.32.0"
