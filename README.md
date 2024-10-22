@@ -72,8 +72,9 @@ Contributions are welcome! Please open an issue or submit a pull request if you'
 
 - Follow the Rust API design guidelines.
 - Ensure compatibility with common LCD displays.
-- Write tests for new functionality.
 - Document all public functions and structs.
+
+[//]: # (- Write tests for new functionality.)
 
 ## License
 

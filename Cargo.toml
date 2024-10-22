@@ -11,7 +11,7 @@ description = "A Rust library for interfacing with I2C LCDs on the ESP32 using t
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/EphraimShikanga/lcd_i2c_rs"
 readme = "README.md"
-documentation = "https://docs.esp-rs.org/lcd_i2c_rs"
+documentation = "https://docs.rs/lcd_i2c_rs/1.0.0/lcd_i2c_rs/"
 
 
 [lib]
