@@ -1,3 +1,6 @@
+#![doc = include_str!("../README.md")]
+#![deny(missing_docs)]
+
 mod consts;
 
 use crate::consts::*;
@@ -5,6 +8,21 @@ use esp_idf_hal::delay::{Ets, BLOCK};
 use esp_idf_hal::i2c::*;
 use esp_idf_hal::sys::EspError;
 
+/// Represents an LCD display connected via I2C.
+///
+/// The `Lcd` struct encapsulates the state and functionality for controlling an LCD display.
+/// It provides methods for initializing the display, controlling the backlight, setting the cursor,
+/// printing characters and strings, and more.
+///
+/// # Fields
+///
+/// * `i2c` - A result containing an `I2cDriver` or an `EspError`.
+/// * `cols` - The number of columns in the LCD.
+/// * `rows` - The number of rows in the LCD.
+/// * `display_mode` - The display mode settings.
+/// * `display_control` - The display control settings.
+/// * `backlight` - The backlight state.
+/// * `current_line` - The current line position of the cursor.
 pub struct Lcd<'a> {
     i2c: Result<I2cDriver<'a>, EspError>,
     cols: u8,
@@ -436,7 +454,8 @@ impl<'a> Lcd<'a> {
         self.i2c
             .as_mut()
             .unwrap()
-            .write(LCD_ADDRESS, &bytes, BLOCK).expect("Failed to write to expander");
+            .write(LCD_ADDRESS, &bytes, BLOCK)
+            .expect("Failed to write to expander");
         Ok(())
     }
 
