@@ -62,7 +62,35 @@ lcd.print_long_str("This string is longer than one line and will wrap around.").
 
 ## API Documentation
 
-The API documentation can be found [here](https://docs.rs/lcd_i2c_rs/1.0.0/lcd_i2c_rs/).
+
+### Modules
+
+#### Structs
+
+- `Lcd<'a>`: Represents the LCD object, which handles all communication with the display.
+
+### Methods
+
+- `new(i2c, rows, cols)`: Create a new Lcd instance.
+- `init()`: Initialize the display.
+
+
+- `display_on() / display_off()`: Turn the display on or off.
+- `backlight_on() / backlight_off()`: Control the backlight.
+- `clear()`: Clear the display.
+
+
+- `cursor(on: bool)`: Enable or disable the cursor.
+- `blink(on: bool)`: Enable or disable cursor blinking.
+- `home()`: Move the cursor to the home position.
+- `set_cursor(col, row)`: Set the cursor position.
+- `next_line()`: Move the cursor to the next line.
+
+
+- `print(text)`: Print text to the display.
+- `print_str(text)`: Print strings to the display.
+- `print_long_str(text)`: Print long strings across multiple lines.
+- `create_custom_chars(location, charmap)`: Create custom characters.
 
 ## Contributing
 
