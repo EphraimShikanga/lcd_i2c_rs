@@ -156,6 +156,15 @@ impl<'a> Lcd<'a> {
         Ok(())
     }
 
+    /// Clears the LCD display.
+    ///
+    /// This function sends the `LCD_CLEARDISPLAY` command to the LCD, waits for the command to complete,
+    /// and resets the `current_line` to 0.
+    ///
+    /// # Returns
+    ///
+    /// * `Ok(())` - If the display is successfully cleared.
+    /// * `Err(anyhow::Error)` - If there is an error while sending the command.
     pub fn clear(&mut self) -> anyhow::Result<()> {
         self.send(LCD_CLEARDISPLAY, 0x0)?;
         Ets::delay_us(2000);
